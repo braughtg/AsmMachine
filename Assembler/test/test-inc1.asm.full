@@ -1,0 +1,23 @@
+.filechange test-inc1.asm
+LOAD R0 #1 
+LOAD R1 #2 
+
+CALL INC2_LABEL1 
+CALL INC3_LABEL1 
+
+HALT 
+
+.filechange test-inc2.asm
+
+
+INC2_LABEL1: LOAD R2 #3 
+RET 
+.filechange test-inc1.asm
+.filechange test-inc3.asm
+
+
+INC3_LABEL1: LOAD R3 #4 
+RET 
+
+.filechange test-inc1.asm
+

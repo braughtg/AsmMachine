@@ -1,0 +1,21 @@
+W:	.word 0
+X:	.word 0 0 0
+Y:	.word 
+Z:	.word 0
+
+	LOAD R0 #0xFFFF
+	STORE R0 W
+
+	LOAD R0 #987654
+	LOAD R1 #X
+	STORE R0 R1
+	STORE R0 R1 +4 
+	STORE R0 R1 +8
+
+	LOAD R0 #0xFF00FF00
+	STORE R0 Y
+	LOAD R2 #Z
+	STORE R0 R2
+	
+	HALT
+	

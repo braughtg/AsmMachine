@@ -1,0 +1,184 @@
+<HTML>
+<HEAD>
+<Title>CS251 - Computer Organization</Title>
+</HEAD>
+
+<BODY BGColor='#FFFFFF' text='#000000' link='#473C8B' vlink='#757575'>
+
+<hr>
+<center>
+<font size=+2 color='#006400'>
+<b>
+Computer Science 251<br>
+Computer Organization<br>
+</b>
+</font>
+<font size=-1>
+<br>
+Dickinson College<br>
+Fall Semester 2003<br>
+Grant Braught
+</font>
+</center>
+
+<hr>
+<center>
+<font size=+2 color='#000064'>
+
+<b>Machine Language Reference Card</b>
+
+</font>
+</center>
+<br><br>
+
+<b>Instruction format</b>
+
+<xmp>
+        FMT   OPCODE     inst. specific information
+      +------+------+----------------------------------+
+      |  4   |  4   |             24                   |
+      +------+------+----------------------------------+
+
+</xmp>
+
+<UL>
+<DL>
+<DT>FMT
+<dd>4 bits indicating the exact format of the following instruction.
+<dt>OPCODE
+<dd>4 bits indicating what the instruction does.
+</dl>
+<br>
+The remaining 24 bits will be used in varying ways depending on the instruction format.
+
+</UL>
+
+<b>The Instruction Formats:</b>
+<UL><xmp>
+  FMT   OPCODE    inst. specific information
++------+------+------+------+------+-------------+
+| 0010 |      | RegA | RegB | RegC |   unused    |
++------+------+------+------+------+-------------+
+  (4)    (4)    (4)    (4)    (4)       (12)
+
+  FMT   OPCODE    inst. specific information
++------+------+------+------+--------------------+
+| 0100 |      | Base | Reg  |      Offset        |
++------+------+------+------+--------------------+
+  (4)    (4)    (4)    (4)           (16)
+
+  FMT   OPCODE    inst. specific information
++------+------+------+------+------+-------------+
+| 0110 |      | 0000 | RegB | RegC |   unused    |
++------+------+------+------+------+-------------+
+  (4)    (4)    (4)    (4)     (4)     (12)
+
+  FMT  OPCODE    inst. specific information
++------+------+------+------+--------------------+
+| 1001 |      | 0000 | RegC |  Immediate Value   |
++------+------+------+------+--------------------+
+  (4)    (4)    (4)    (4)           (16)
+
+  FMT   OPCODE    inst. specific information
++------+------+------+------+--------------------+
+| 1011 |      | RegA | RegC |  Immediate Value   |
++------+------+------+------+--------------------+
+  (4)    (4)    (4)    (4)           (16)
+
+  FMT   OPCODE    inst. specific information
++------+------+------+------+--------------------+
+| 1100 |      | 0000 | 0000 |       Offset       |
++------+------+------+------+--------------------+
+  (4)    (4)    (4)    (4)           (16)
+
+  FMT   OPCODE    inst. specific information
++------+------+------+------+--------------------+
+| 1110 |      | 0000 | Reg  |       Offset       |
++------+------+------+------+--------------------+
+  (4)    (4)    (4)    (4)           (16)
+</xmp></UL>
+
+
+
+<b>The Instruction Set:</b>
+<font size=-1>
+<UL><xmp>
+FMT OPCODE   Meaning                                Name                   
+------------------------------------------------------------------------------------
+0010 0011     RegC = RegA + RegB                    Add                    
+0010 1111     RegC = RegA - RegB                    Subtract               
+0010 0010     RegC = RegA & RegB                    Bitwise And            
+0010 0001     RegC = RegA | RegB                    Bitwise Or             
+
+0100 0001     Reg = MM[Base + Offset]               Load                     
+0100 0010     MM[Base + Offset] = Reg               Store                  
+
+0110 1001     RegC = RegB                           Move                   
+0110 0100     RegC = ~RegB                          Not                    
+0110 0010     RegC = RegB << 1                      Shift Left             
+0110 0001     RegC = RegB >>> 1                     Shift Right            
+
+1001 0011     RegC = [Immed. Value]                 Load Immediate         
+1001 1001     RegC = (RegC & 0x0000FFFF) |          Load Upper Immediate   
+                     ([Immed. Value] << 16)  
+					 
+1011 0011     RegC = RegA + [Immed. Value]          Add Immediate          
+1011 1111     RegC = RegA - [Immed. Value]          Subtract Immediate     
+1011 0010     RegC = RegA & [Immed. Value]          And Immediate          
+1011 0001     RegC = RegA | [Immed. Value]          Or Immediate           
+
+1100 0001     PC = PC + [Offset] * 4                Unconditional Branch   
+
+1110 0001     IF REG == 0 THEN                      Branch on Zero         
+                PC = PC + [Offset] * 4  
+1110 0010     IF REG < 0 THEN                       Branch on Negative     
+                PC = PC + [Offset] * 4
+1110 0011     IF REG % 2 == 1 THEN                  Branch on Odd          
+                PC = PC + [Offset] * 4
+
+1110 0100     PC = REG                              Jump to Register       
+0110 1000     REGC = PC + 4, PC = REGB              Jump and Link          
+</xmp></UL>
+</font>
+
+<b>Special Instructions:</b>
+
+<br><br>
+<b>NOP:</b>
+<xmp>
+     Name:               No Operation
+
+     Meaning:            NO OPERATION  
+   
+     Machine Language:   FMT    OPCODE    inst. specific information
+                        +------+------+------+------+--------------------+
+                        | 0000 | 0000 | 0000 | 0000 | 00000000  00000000 |
+                        +------+------+------+------+--------------------+
+                          (4)    (4)    (4)    (4)           (16)
+</xmp>
+
+
+<b>HALT:</b>
+<xmp>
+     Name:               Halt
+
+     Meaning:            STOP THE MACHINE - Infinite loop in micro-program
+   
+     Machine Language:   FMT    OPCODE    inst. specific information
+                        +------+------+------+------+--------------------+
+                        | 1111 | 1111 | 1111 | 1111 | 11111111  11111111 |
+                        +------+------+------+------+--------------------+
+                          (4)    (4)    (4)    (4)           (16)
+</xmp>
+<hr>
+<font size=-2>
+<script language="JavaScript">
+          <!---//hide script from old browsers
+          document.write( "This document was last updated "+ document.lastModified + "<br><br>" );
+          //end hiding contents --->
+          </script>
+</FONT>
+
+</BODY>
+</HTML>
+

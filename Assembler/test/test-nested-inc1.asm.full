@@ -1,0 +1,28 @@
+.filechange test-nested-inc1.asm
+
+
+LOAD R0 #1 
+
+CALL INC1_START 
+
+HALT 
+
+.filechange test-nested-inc2.asm
+
+
+INC1_START: LOAD R1 #2 
+MOV R8 R12 
+
+CALL INC1_INC2_LABEL1 
+
+MOV R12 R8 
+RET 
+
+.filechange test-inc3.asm
+
+
+INC1_INC2_LABEL1: LOAD R3 #4 
+RET 
+
+.filechange test-nested-inc2.asm
+.filechange test-nested-inc1.asm

@@ -1,0 +1,15 @@
+X:	.word 3 2 1 0 -1 -2 -3
+
+
+	LOAD R0 #-3
+	LOAD R1 #-1
+	LOAD R2 #0
+	LOAD R3 #1
+	LOAD R4 #2
+	
+	LOAD R5 #65535
+	LOAD R6 #65536
+
+	LOAD R7 #123456789
+
+	HALT

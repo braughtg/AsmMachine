@@ -1,0 +1,276 @@
+<HTML>
+<HEAD>
+<Title>CS251 - Computer Organization</Title>
+</HEAD>
+
+<BODY BGColor='#FFFFFF' text='#000000' link='#473C8B' vlink='#757575'>
+
+<hr>
+<center>
+<font size=+2 color='#006400'>
+<b>
+Computer Science 251<br>
+Computer Organization<br>
+</b>
+</font>
+<font size=-1>
+<br>
+Dickinson College<br>
+Fall Semester 2003<br>
+Grant Braught
+</font>
+</center>
+
+<hr>
+<center>
+<font size=+2 color='#000064'>
+
+<b>Assembly Language Reference Card</b>
+
+</font>
+</center>
+<br><br>
+
+<b>Assembly Language Syntax:</b>
+<UL>
+<LI>The assembler is not case sensitive.
+<UL>
+<LI>Labels and Assembly Instructions will be all caps by convention.
+<LI>Assembler directives will be all lowercase by convention.
+</UL>
+</UL>
+<xmp>
+<line>
+       <blank> | 
+       <comment> |
+       <label> |
+       <label> <instruction> |
+       <label> <allocation directive> |
+       <label> <break directive> |
+       <break directive> |
+       <stacksize directive> |
+       <include directive> <filename> <namespace>
+       <instruction> |
+       
+
+<blank>
+       Blank line
+
+<comment>
+       * <string>
+
+<label>
+       <Letter><string><Letter>:
+
+<stacksize directive>
+       .stacksize <integer>
+
+<break directive>
+       .break
+
+<include directive>
+       .include <filename> <namespace>
+
+<allocation directive>
+       .byte <constant value list>
+       .half <constant vlaue list>
+       .word <constant value list>
+       .space <integer>
+
+<instruction>
+       <opcode> <arguments>       
+</xmp>
+
+<b>Constant values:</b>
+
+<UL>
+<XMP>
+Example:             Value Type:
+----------------------------------------------
+R12                  Register
+START                Label
+123                  decimal number
+-123                 negative decimal number
+0xF3                 hexadecimal numbers
+b0101010111010011    binary numbers
+</xmp>
+</UL>
+
+<br><br>
+<b>Field Flags:</b>
+<UL>
+<xmp>
+Flag:    Meaning:            Value Types Allowed:
+--------------------------------------------------------------
+R        Register            Register
+#        Constant            positive decimal, negative decimal, 
+                             2's complement hex,
+                             2's complement binary
+L        Label               Labels
+[+]      Optional Offset     positive decimal, 
+                             unsigned hex, 
+                             unsigned binary
+</xmp>
+</UL>
+
+<br><br>
+<b>Registers Reserved For Assembler:</b>
+<UL>
+<xmp>
+Register:       Use:
+-----------------------------------------
+R15             Scratch
+R14             RV : Return Value
+R13             SP : Stack Pointer
+R12             RA : Return Address
+</xmp>
+</UL>
+
+<br><br>
+<b>Instructions:</b>
+<xmp>
+
+Instruction        Example             Meaning                        Comments
+---------------------------------------------------------------------------------------------
+ADD R R R          ADD R1 R2 R3        R1 = R2 + R3              
+ADD R R #          ADD R1 R2 #231      R1 = R2 + 231
+
+SUB R R R          SUB R1 R2 R3        R1 = R2 - R3
+SUB R R #          SUB R1 R2 #0xFF     R1 = R2 - 0xFF
+
+AND R R R          AND R1 R2 R3        R1 = R2 & R3
+AND R R #          AND R1 R2 #723      R1 = R2 & 723
+
+OR R R R           OR R1 R2 R3         R1 = R2 | R3
+OR R R #           OR R1 R2 #0xAB      R1 = R2 | 0xAB
+
+MOV R R            MOV R1 R2           R1 = R2
+NOT R R            NOT R1 R2           R1 = ~R2
+SHL R R            SHL R1 R2           R1 = R2 << 1                   LSb = 0
+SHR R R            SHR R1 R2           R1 = R2 >>> 1                  MSb = 0
+
+LOAD R #           LOAD R1 #0xC4       R1 = 0xC4                      Immediate
+LOAD R #L          LOAD R1 #X          R1 = X                         Immediate Label
+LOAD R L           LOAD R1 X           R1 = MM[X]                     Direct 
+LOAD R R [+]       LOAD R1 R2          R1 = MM[R2]		              Indirect
+                   LOAD R1 R2 +4       R1 = MM[R2 + 4]                Indirect
+
+STORE R L          STORE R1 X          MM[X] = R1                     Direct 
+STORE R R [+]      STORE R1 R2         MM[R2] = R1                    Indirect
+                   STORE R1 R2 +8      MM[R2 + 8] = R1
+
+JUMP L             JUMP JLOC           PC = JLOC                 
+JUMP R             JUMP R1             PC = R1                   
+
+CALL L             CALL CLOC           RA = PC + 4, PC = CLOC	     
+RET                RET                 PC = RA
+
+BNEG R L           BNEG R1 BLOC        IF R1 < 0 THEN PC = BLOC  
+BPOS R L           BPOS R1 BLOC        IF R1 > 0 THEN PC = BLOC
+BZERO R L          BZERO R1 BLOC       IF R1 == 0 THEN PC = BLOC
+BNZERO R L         BNZERO R1 BLOC      IF R1 != 0 THEN PC = BLOC
+
+BODD R L           BODD R1 BLOC        IF R1 % 2 != 0 THEN PC = BLOC         
+BEVEN R L          BEVEN R1 BLOC       IF R1 % 2 == 0 THEN PC = BLOC 
+
+BEQ R R L          BEQ R1 R2 BLOC      IF R1 == R2 THEN PC = BLOC
+BNEQ R R L         BNEQ R1 R2 BLOC     IF R1 != R2 THEN PC = BLOC
+BGEQ R R L         BGEQ R1 R2 BLOC     IF R1 >= R2 THEN PC = BLOC
+BLEQ R R L         BLEQ R1 R2 BLOC     IF R1 <= R2 THEN PC = BLOC
+BGT R R L          BGT R1 R2 BLOC      IF R1 > R2 THEN PC = BLOC
+BLT R R L          BLT R1 R2 BLOC      IF R1 < R2 THEN PC = BLOC
+
+PUSH R             PUSH R1             MM[SP] = R1; SP = SP - 4
+POP R              POP R1              SP = SP + 4; R1 = MM[SP]
+
+NOP                NOP                 Do Nothing
+HALT               HALT                Halt the machine
+</xmp>
+
+<br><br>
+<b>Data Allocation:</b>
+<xmp>
+Type:                  Example:                     Comments
+--------------------------------------------------------------------------------
+.word v1,v2,...        .word 3031, 312, 13, 83      Store 3031, 312, 13 and 83 in successive
+                                                    4 byte chunks of memory.
+.half v1,v2,...	       .half 0x017B                 Store 0x017B in memory
+.byte v1,v2,...	       .byte b10101101, 17, 0x3C    Store the values in successive bytes
+                                                    of memory.
+.space n               .space 32		    Allocate 32 bytes of memory initialized
+                                                    to zeros.
+
+.stacksize n           .stacksize 128               Allocate 128 bytes of stack space and
+                                                    set the stack pointer (R13) to point to
+                                                    the top of the stack.
+</xmp> 
+
+<b>Labels:</b>
+
+<p>Any line except a <code>.stacksize</code> or a <code>.include</code> directive may be labeled.  Labels on lines containing instructions are branch targets.  Labels on lines containing data allocations are variable names and refer to the location of the first value stored by the allocation line.  Labels may be used in any appropriate location within an instruction.  A label can be any string of up to 32 characters starting with an alphabetic character, containing only alphanumeric characters and terminating in a :.
+
+<br><br>
+
+<b>Examples of Allocation:</b>
+<xmp>
+XARRAY: .word 32, 33, 57
+YARRAY: .space 128
+ZARRAY: .word 0 1 2 3 4 5 6 7
+        .word 8 9 10 11 12 13 14 15
+	.word 16 17 18 19 20
+
+        .stacksize 128
+</xmp>
+
+<b>Example of Branch Target:</b>
+<xmp>
+TARG1: ADD R1 R2 R3
+       BNZ R1 TARG1
+</xmp>
+
+<b>The .include Directive:</b>
+<p>A <code>.include</code> directive imports the code from another file into the program at the point where it appears.
+
+<p>For example, consider the following fragment of code:
+<xmp>
+...
+.include mult.asm MATH
+    ...
+    CALL MATH_MULT
+    ...
+</xmp>
+<p>The <code>.include</code> directive imported the code from the file <code>mult.asm</code> into the current program.  All of the labels in the <code>mult.asm</code> file have been prefixed with the string "MATH" to prevent label conflicts. Thus the instruction <code>CALL MATH_MULT</code> will use the <code>CALL</code> instruction to branch to the line labeled <code>MULT</code> in the <code>mult.asm</code> file.
+<p>Note that included files may use <code>.break</code> and additional <code>.include</code> directives. However, included files may not use any data allocation directives (e.g. <code>.word</code>, <code>.stacksize</code>).
+
+<p><b>The .break Directive:</b>
+<p>A <tt>.break</tt> directive can be inserted on any line in the assembly language program.  The presence of this directive will cause the machine emulator to pause the execution of the program when the line is reached.  This provides a convenient way to run the program to a point of interest and then begin stepping through individual instructions.
+
+<p>For example consider the following fragment of code:
+<xmp>
+     ...
+     LOAD R0 #100
+     STORE R0 X
+     .break
+     LOAD R0 Y
+     ...
+</xmp>
+<p>Assume a program containing this code has been assembled and loaded into the machine emulator.  Clicking the "Run" button will execute the program up to the line with the <code>.break</code> directive.  The execution would pause at that point.  Execution can be continued in a step by step manner with the "Step" button or continued until the next <code>.break</code> with the "Run" button.
+
+<br><br>
+
+<hr>
+<font size=-2>
+<script language="JavaScript">
+          <!---//hide script from old browsers
+          document.write( "This document was last updated "+ document.lastModified + "<br><br>" );
+          //end hiding contents --->
+          </script>
+</FONT>
+
+</BODY>
+</HTML>
+
+
+
+
+
